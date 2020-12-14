@@ -1,0 +1,99 @@
+import React, { useEffect } from 'react';
+import 'components/Appointment/styles.scss';
+import Header from 'components/Appointment/Header';
+import Show from 'components/Appointment/Show';
+import Empty from 'components/Appointment/Empty';
+import Form from 'components/Appointment/Form';
+import Status from 'components/Appointment/Status';
+import Confirm from 'components/Appointment/Confirm';
+import Error from 'components/Appointment/Error';
+import useVisualMode from 'hooks/useVisualMode.js';
+
+
+export default function Appointment(props) {
+  const EMPTY = 'EMPTY';
+  const SHOW = 'SHOW';
+  const CREATE = 'CREATE';
+  const SAVING = 'SAVING';
+  const DELETE = 'DELETE';
+  const CONFIRM = 'CONFIRM';
+  const ERROR_SAVE = 'ERROR_SAVE';
+  const ERROR_DELETE = 'ERROR_DELETE';
+  const EDIT = 'EDIT';
+  const { mode, transition, back } = useVisualMode(
+    props.interview ? SHOW : EMPTY
+  );
+
+  const save = (name, interviewer) => {
+    console.log(mode);
+    transition(SAVING);
+
+    const interview = {
+      student: name,
+      interviewer,
+    };
+    props.bookInterview(props.id, interview)
+
+      .then(() => {
+        transition(SHOW);
+      })
+      .catch(() => {
+        transition(ERROR_SAVE);
+      });
+  };
+
+  useEffect(() => {
+    props.interview ? transition(SHOW) : transition(EMPTY);
+  }, [props.interview]);
+
+  return (
+    
+    <article className="appointment">
+      <Header time={props.time}></Header>
+      {mode === EMPTY && <Empty onAdd={() => transition(CREATE)} />}
+      {mode === SHOW && (
+        <Show
+          onEdit={() => transition(EDIT)}
+          onDelete={() => transition(CONFIRM)}
+          student={props.interview.student}
+          interviewer={props.interview.interviewer.name}
+        />
+      )}
+      {mode === SAVING && <Status message="Saving..." />}
+      {mode === DELETE && <Status message="Deleting..." />}
+      {mode === ERROR_SAVE && (
+        <Error onCancel={() => back(EMPTY)} message="Error Saving Data" />
+      )}
+      {mode === ERROR_DELETE && (
+        <Error
+          onCancel={() => transition(SHOW)}
+          message="Error Deleting Data"
+        />
+      )}
+      {mode === CONFIRM && (
+        <Confirm
+          id={props.id}
+          onConfirm={props.cancelInterview(props.id)}
+          onCancel={() => back(SHOW)}
+          transition={transition}
+        />
+      )}
+      {mode === EDIT && (
+        <Form
+          onSave={save}
+          onCancel={() => back(EMPTY)}
+          name={props.interview.student}
+          interviewers={props.interviewers}
+          interviewer={props.interview.interviewer.id}
+        />
+      )}
+      {mode === CREATE && (
+        <Form
+          onSave={save}
+          onCancel={() => back(EMPTY)}
+          interviewers={props.interviewers}
+        />
+      )}
+    </article>
+  );
+}
