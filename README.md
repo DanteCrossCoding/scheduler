@@ -1,5 +1,7 @@
 # Interview Scheduler
 
+Scheduler is a web based interview scheduling system build using React, Webpack, Axios, and tested using Storybook, Jest, and Cypress.
+
 ## Setup
 
 Install dependencies with `npm install`.
@@ -21,3 +23,14 @@ npm test
 ```sh
 npm run storybook
 ```
+
+## Dependencies 
+
+```sh
+axios: "^0.21.0",
+classnames: "^2.2.6",
+normalize.css: "^8.0.1",
+react: "^16.9.0",
+react-dom: "^16.9.0",
+react-hooks-testing-library: "^0.6.0",
+react-scripts: "3.0.0"
