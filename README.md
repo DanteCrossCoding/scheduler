@@ -2,6 +2,8 @@
 
 Scheduler is a web based interview scheduling system build using React, Webpack, Axios, and tested using Storybook, Jest, and Cypress.
 
+![Main Page](https://raw.githubusercontent.com/DanteCrossCoding/scheduler/master/doc/Scheduler%20Main%20page%20simple.png)
+
 ## Setup
 
 Install dependencies with `npm install`.
