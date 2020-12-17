@@ -36,7 +36,7 @@ export default function useApplicationData(initial) {
     const day = dayId[state.day];
 
     const daysCopy = [...state.days];
-    console.log(appointments[id].interview);
+    // console.log(appointments[id].interview);
     if (!state.appointments[id].interview) {
       daysCopy[day].spots--;
     }
