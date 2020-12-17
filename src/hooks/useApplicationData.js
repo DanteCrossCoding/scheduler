@@ -3,7 +3,7 @@ import axios from 'axios';
 
 export default function useApplicationData(initial) {
   const [state, setState] = useState({
-    day: 'Tuesday',
+    day: 'Monday',
     days: [],
     appointments: {
       1: {
@@ -35,15 +35,17 @@ export default function useApplicationData(initial) {
 
     const day = dayId[state.day];
 
-    const daysVar = [...state.days];
-    daysVar[day].spots--;
-    const URL = `http://localhost:8001/api/appointments/${id}`;
-    const promise = axios.put(URL, appointment)
-                      .then((response) => {
+    const daysCopy = [...state.days];
+    console.log(appointments[id].interview);
+    if (!state.appointments[id].interview) {
+      daysCopy[day].spots--;
+    }
+    const URL = `/api/appointments/${id}`;
+    const promise = axios.put(URL, appointment).then((response) => {
       setState({
         ...state,
         appointments,
-        days: daysVar,
+        days: daysCopy,
       });
     });
 
@@ -53,17 +55,16 @@ export default function useApplicationData(initial) {
   const cancelInterview = (id) => {
     const day = dayId[state.day];
 
-    const daysVar = [...state.days];
-    daysVar[day].spots++;
-    const URL = `http://localhost:8001/api/appointments/${id}`;
-    return axios.delete(URL)
-             .then((response) => {
-                const appointment = { ...state.appointments[id], interview: null };
-                const appointments = { ...state.appointments, [id]: appointment };
+    const daysCopy = [...state.days];
+    daysCopy[day].spots++;
+    const URL = `/api/appointments/${id}`;
+    return axios.delete(URL).then((response) => {
+      const appointment = { ...state.appointments[id], interview: null };
+      const appointments = { ...state.appointments, [id]: appointment };
       setState({
         ...state,
         appointments,
-        days: daysVar,
+        days: daysCopy,
       });
     });
   };

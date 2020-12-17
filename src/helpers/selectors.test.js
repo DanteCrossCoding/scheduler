@@ -1,17 +1,25 @@
 import { getAppointmentsForDay, getInterview } from "helpers/selectors";
 
-//day test data and tests
 const state = {
   days: [
     {
       id: 1,
       name: "Monday",
-      appointments: [1, 2, 3]
+      appointments: [1, 2, 3],
+      interviewers: [
+        1,
+        2
+        ],
+        spots: 4
     },
     {
       id: 2,
       name: "Tuesday",
-      appointments: [4, 5]
+      appointments: [4, 5],
+      interviewers: [
+        1
+        ],
+        spots: 4
     }
   ],
   appointments: {
@@ -27,6 +35,18 @@ const state = {
       id: 5,
       time: "4pm",
       interview: { student: "Chad Takahashi", interviewer: 2 }
+    }
+  },
+  interviewers: {
+    "1": {  
+      "id": 1,
+      "name": "Sylvia Palmer",
+      "avatar": "https://i.imgur.com/LpaY82x.png"
+    },
+    "2": {
+      id: 2,
+      name: "Tori Malcolm",
+      avatar: "https://i.imgur.com/Nmx0Qxo.png"
     }
   }
 };
@@ -57,25 +77,8 @@ test("getAppointmentsForDay returns an empty array when the day is not found", (
   expect(result.length).toEqual(0);
 });
 
-//interviewer test data and tests
 
-interviewers: [{
-  "1": {  
-    "id": 1,
-    "name": "Sylvia Palmer",
-    "avatar": "https://i.imgur.com/LpaY82x.png"
-  },
-  "2": {
-    "id": 2,
-    "name": "Tori Malcolm",
-    "avatar": "https://i.imgur.com/Nmx0Qxo.png"
-  },
-  "3": {
-    "id": 3,
-    "name": "Mildred Nazir",
-    "avatar": "https://i.imgur.com/T2WwVfS.png"
-    }
-}];
+//test for getInterview helper
 
 test("getInterview returns an object with the interviewer data", () => {
   const result = getInterview(state, state.appointments["3"].interview);

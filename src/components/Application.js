@@ -19,37 +19,30 @@ export default function Application(props) {
     bookInterview,
     cancelInterview,
   } = useApplicationData();
-  let dailyAppointments = [];
+  let dayAppt = [];
 
   useEffect(() => {
-    const URL = 'http://localhost:8001/api/days';
-    axios.get(URL).then((response) => {
-      Promise.all([
-        axios.get('http://localhost:8001/api/days'),
-        axios.get('http://localhost:8001/api/appointments'),
-        axios.get('http://localhost:8001/api/interviewers'),
-      ])
-        .then((all) => {
-          setState((prev) => ({
-            ...prev,
-            days: all[0].data,
-            appointments: all[1].data,
-            interviewers: all[2].data,
-          }));
-        })
-        .then(() => {
-          // back(EMPTY);
-          // transition(SHOW);
-        });
+    Promise.all([
+      axios.get("/api/days"),
+      axios.get("/api/appointments"),
+      axios.get("/api/interviewers"),
+    ]).then((all) => {
+      setState(prev => ({
+        ...prev,
+        days: all[0].data,
+        appointments: all[1].data,
+        interviewers: all[2].data,
+      }));
     });
   }, []);
 
-  dailyAppointments = getAppointmentsForDay(state, state.day);
-  const appointments = dailyAppointments.map((appointment) => {
+  dayAppt = getAppointmentsForDay(state, state.day);
+  const appointments = dayAppt.map((appointment) => {
     const interview = getInterview(state, appointment.interview);
     const interviewers = getInterviewers(state, 'Monday');
     return (
       <Appointment
+        mode={state.mode}
         bookInterview={bookInterview}
         cancelInterview={cancelInterview}
         key={appointment.id}
@@ -90,5 +83,4 @@ export default function Application(props) {
         <Appointment key={'last'} time={'5pm'} />
       </section>
     </main>
-  );
-}
+  )};
