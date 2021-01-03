@@ -1,3 +1,5 @@
+
+//generates appointment list for selected day
 const getAppointmentsForDay = (state, day) => {
   const apptArr = state.days.filter((days) => days.name === day);
   let daysApts = [];
@@ -10,6 +12,7 @@ const getAppointmentsForDay = (state, day) => {
   return [];
 };
 
+//generates interview data for selected interview
 const getInterview = function (state, interview) {
   if (interview !== null) {
     return {
@@ -20,6 +23,7 @@ const getInterview = function (state, interview) {
   return null;
 }
 
+//generates list of available interviewers
 const getInterviewers = (state, day) => {
   const apptArr = state.days.filter((days) => days.name === day);
   let interviewers = [];

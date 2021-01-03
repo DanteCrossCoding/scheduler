@@ -1,6 +1,6 @@
 import React from "react";
 
-
+// Blank/Empty appointment page styling
 export default function Empty(props) {
   return (
     <main className="appointment__add">

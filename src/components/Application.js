@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {  useEffect } from 'react';
 import axios from 'axios';
 import 'components/Application.scss';
 import DayList from 'components/DayList';
@@ -21,6 +21,7 @@ export default function Application(props) {
   } = useApplicationData();
   let dayAppt = [];
 
+  //collects data form database
   useEffect(() => {
     Promise.all([
       axios.get("/api/days"),
@@ -35,7 +36,8 @@ export default function Application(props) {
       }));
     });
   }, []);
-
+  
+// generates appointment data from database
   dayAppt = getAppointmentsForDay(state, state.day);
   const appointments = dayAppt.map((appointment) => {
     const interview = getInterview(state, appointment.interview);
@@ -53,7 +55,7 @@ export default function Application(props) {
       />
     );
   });
-
+// Sidebar styling
   return (
     <main className="layout">
       <section className="sidebar">

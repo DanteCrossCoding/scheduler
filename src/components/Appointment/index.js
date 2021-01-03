@@ -10,8 +10,9 @@ import Confirm from 'components/Appointment/Confirm';
 import Error from 'components/Appointment/Error';
 
 import useVisualMode from 'hooks/useVisualMode.js';
-import useApplicationData from 'hooks/useApplicationData.js'
 
+
+// props listing appointment pages
 export default function Appointment(props) {
   const EMPTY = 'EMPTY';
   const SHOW = 'SHOW';
@@ -26,21 +27,8 @@ export default function Appointment(props) {
     props.interview ? SHOW : EMPTY
   );
 
-  const {bookInterview, cancelInterview } = useApplicationData
-
-  const deleteInterview = () => {
-    // transition(DELETE, true)
-    props.cancelInterview(props.id, props)
-      .then((res) => {
-        transition(EMPTY)
-      })
-      // .catch((error) => {
-      //   transition(ERROR_DELETE, true);
-      // })
-  }
-
+  // saves and transitions from CREATE page to SAVING page
   const save = (name, interviewer) => {
-    
     const interview = {
       student: name,
       interviewer,
@@ -55,6 +43,12 @@ export default function Appointment(props) {
         transition(ERROR_SAVE, true);
       });
   };
+  //delete appointment transition (to keep styling clean)
+  const deleteInterview = () => {
+    transition(CONFIRM);
+  };
+
+  //edit appointment transition (to keep styling clean)
   const edit = () => {
     transition(EDIT);
   };
@@ -69,7 +63,7 @@ export default function Appointment(props) {
       {mode === SHOW && (
         <Show
           onEdit={edit}
-          onDelete={() => transition(CONFIRM)}
+          onDelete={deleteInterview}
           student={props.interview.student}
           interviewer={props.interview.interviewer.name}
         />
@@ -77,7 +71,9 @@ export default function Appointment(props) {
       {mode === SAVING && <Status message="Saving..." />}
       {mode === DELETE && <Status message="Deleting..." />}
       {mode === ERROR_SAVE && (
-        <Error onClose={() => back(EMPTY)} message="Error Saving Data" />
+        <Error 
+          onClose={() => back(EMPTY)} 
+          message="Error Saving Data" />
       )}
       {mode === ERROR_DELETE && (
         <Error
@@ -90,13 +86,12 @@ export default function Appointment(props) {
           message={'Delete the appointment?'}
           onCancel={back}
           onConfirm={props.cancelInterview(props.id)}
-          transition={transition}
         />
       )}
       {mode === EDIT && (
         <Form
           onSave={save}
-          onCancel={() => back(EMPTY)}
+          onCancel={() => transition(EMPTY)}
           name={props.interview.student}
           interviewers={props.interviewers}
           interviewer={props.interview.interviewer.id}
@@ -105,7 +100,7 @@ export default function Appointment(props) {
       {mode === CREATE && (
         <Form
           onSave={save}
-          onCancel={() => back(EMPTY)}
+          onCancel={() => transition(EMPTY)}
           interviewers={props.interviewers}
         />
       )}

@@ -1,5 +1,6 @@
 import React from "react";
 
+// Error page page styling
 export default function Error({message, onClose}) {
   return (
     <main className="appointment__card appointment__card--error">

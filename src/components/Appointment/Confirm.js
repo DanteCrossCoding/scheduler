@@ -3,6 +3,7 @@ import Button from "../Button.js";
 
 export default function Confirm({message, onConfirm, onCancel}) {
 
+  // Confirm page styling
   return (
     <main className="appointment__card appointment__card--confirm">
   <h1 className="text--semi-bold">{message}</h1>

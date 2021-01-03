@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
 
 export default function useApplicationData(initial) {
@@ -14,7 +14,7 @@ export default function useApplicationData(initial) {
     },
     interviewers: {},
   });
-
+  // sets a dayID for tracking appointments
   const dayId = {
     Monday: 0,
     Tuesday: 1,
@@ -23,6 +23,7 @@ export default function useApplicationData(initial) {
     Friday: 4,
   };
 
+  //function that sets interview data
   const bookInterview = (id, interview) => {
     const appointment = {
       ...state.appointments[id],
@@ -36,9 +37,8 @@ export default function useApplicationData(initial) {
     const day = dayId[state.day];
 
     const daysCopy = [...state.days];
-    // console.log(appointments[id].interview);
     if (!state.appointments[id].interview) {
-      daysCopy[day].spots--;
+      daysCopy[day].spots--; //decreases available interviews number on sidebar
     }
     const URL = `/api/appointments/${id}`;
     const promise = axios.put(URL, appointment).then((response) => {
@@ -54,9 +54,9 @@ export default function useApplicationData(initial) {
 
   const cancelInterview = (id) => {
     const day = dayId[state.day];
-
+    
     const daysCopy = [...state.days];
-    daysCopy[day].spots++;
+    daysCopy[day].spots++; //increases available interviews number on sidebar
     const URL = `/api/appointments/${id}`;
     return axios.delete(URL).then((response) => {
       const appointment = { ...state.appointments[id], interview: null };

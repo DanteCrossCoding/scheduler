@@ -2,17 +2,29 @@ import React, { useState } from 'react';
 import InterviewerList from '../InterviewerList';
 import Button from '../Button';
 
+
+// Appointment Form styling
 export default function Form(props) {
-  const {interviewers, onSave, onCancel} = props;
+  const {onSave, onCancel} = props;
 
   const [name, setName] = useState(props.name || "");
   const [interviewer, setInterviewer] = useState(props.interviewer || null);
   const [error, setError] = useState('');
 
-  function validate() {
+  // Checks if a student name was entered for the appointment
+  function validateName() {
     if (name === "") {
       setError("Student name cannot be blank");
       return;
+    }
+    props.onSave(name, interviewer);
+    setError('');
+  }
+  // Checks if an interviewer has been selected for appointment
+  function validateInterviewer() {
+    if (interviewer === null) {
+      setError("Must select an interviewer");
+      return
     }
     props.onSave(name, interviewer);
     setError('');
@@ -59,7 +71,7 @@ export default function Form(props) {
       <section className="appointment__card-right">
         <section className="appointment__actions">
           <Button danger onClick={cancel}>Cancel</Button>
-          <Button confirm onClick={(save, validate)}>Save</Button>
+          <Button confirm onClick={(save, validateName, validateInterviewer)}>Save</Button>
         </section>
       </section>
     </main>
