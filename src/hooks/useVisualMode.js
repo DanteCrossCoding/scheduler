@@ -16,13 +16,15 @@ const transition = ((newMode, replace) => {
 })
 
 //accesses page history to return to last page
-const back = (() => {
-  if(history.length > 1) {
-    history.pop();
-    setMode(history[history.length-1]);
-    const updatedHistory = [...history];
+const back = () => {
+  if (history.length < 2) {
+    return;
+  }
+  const updatedHistory = [...history];
+    updatedHistory.pop();
+    setMode(updatedHistory[updatedHistory.length-1]);
     setHistory(prev => [...prev, updatedHistory]);
   }
-})
+
 return { mode, transition, back };
 };

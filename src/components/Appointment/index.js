@@ -23,7 +23,7 @@ export default function Appointment(props) {
   const ERROR_SAVE = 'ERROR_SAVE';
   const ERROR_DELETE = 'ERROR_DELETE';
   const EDIT = 'EDIT';
-  const { mode, transition, back } = useVisualMode(
+  const { mode, transition } = useVisualMode(
     props.interview ? SHOW : EMPTY
   );
 
@@ -43,10 +43,17 @@ export default function Appointment(props) {
         transition(ERROR_SAVE, true);
       });
   };
-  //delete appointment transition (to keep styling clean)
+  
   const deleteInterview = () => {
-    transition(CONFIRM);
-  };
+    transition('DELETE', true);
+    props.cancelInterview(props.id)
+    .then(response => {
+      transition('EMPTY');
+    })
+    .catch(error => {
+      transition('ERROR_DELETE', true);
+    })
+  }
 
   //edit appointment transition (to keep styling clean)
   const edit = () => {
@@ -63,7 +70,7 @@ export default function Appointment(props) {
       {mode === SHOW && (
         <Show
           onEdit={edit}
-          onDelete={deleteInterview}
+          onDelete={() => transition(CONFIRM)}
           student={props.interview.student}
           interviewer={props.interview.interviewer.name}
         />
@@ -72,7 +79,7 @@ export default function Appointment(props) {
       {mode === DELETE && <Status message="Deleting..." />}
       {mode === ERROR_SAVE && (
         <Error 
-          onClose={() => back(EMPTY)} 
+          onClose={() => transition(CREATE)} 
           message="Error Saving Data" />
       )}
       {mode === ERROR_DELETE && (
@@ -84,14 +91,14 @@ export default function Appointment(props) {
       {mode === CONFIRM && (
         <Confirm
           message={'Delete the appointment?'}
-          onCancel={back}
-          onConfirm={props.cancelInterview(props.id)}
+          onCancel={() => transition(SHOW)}
+          onConfirm={deleteInterview}
         />
       )}
       {mode === EDIT && (
         <Form
           onSave={save}
-          onCancel={() => transition(EMPTY)}
+          onCancel={() => transition(SHOW)}
           name={props.interview.student}
           interviewers={props.interviewers}
           interviewer={props.interview.interviewer.id}
